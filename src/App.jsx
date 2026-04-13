@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Moon, Sun, MessageCircle, X, Navigation, 
   MapPin, Star, Heart, Calendar, Wind, Camera, Check, Send
@@ -69,18 +69,58 @@ const GenericPage = ({ title, subtitle }) => (
   </div>
 );
 
-const SignInPage = () => {
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
+const ProfilePage = ({ user, setUser }) => {
   const navigate = useNavigate();
+  if(!user) return <div className="section-padding animate-fade-in-up" style={{paddingTop:'12rem', textAlign:'center', minHeight:'80vh'}}><h2 className="serif">Please sign in first.</h2></div>;
+  
+  return (
+    <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem', display: 'flex', justifyContent: 'center' }}>
+      <div style={{ background: 'var(--surface-color)', padding: '3rem', borderRadius: '20px', boxShadow: 'var(--shadow)', width: '100%', maxWidth: '600px', border: '1px solid var(--border-color)' }}>
+        <h2 className="serif" style={{marginBottom: '0.5rem', textAlign: 'center'}}>Guest Profile</h2>
+        <p style={{textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem'}}>Manage your upcoming stays and preferences.</p>
+        
+        <div style={{display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border-color)'}}>
+           <div style={{width: '80px', height: '80px', borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', color: '#fff', fontWeight: 'bold'}}>
+             {user[0].toUpperCase()}
+           </div>
+           <div>
+             <h3 className="serif">{user}</h3>
+             <p style={{color: 'var(--text-muted)'}}>Premium Member</p>
+           </div>
+        </div>
+
+        <h4 className="serif" style={{marginBottom:'1rem'}}>Upcoming Reservations</h4>
+        <div style={{padding: '1.5rem', border: '1px solid var(--border-color)', borderRadius: '10px', marginBottom: '2rem'}}>
+           <p style={{color:'var(--text-muted)', fontSize:'0.9rem'}}>No upcoming stays yet.</p>
+        </div>
+
+        <button className="btn-outline" style={{width: '100%'}} onClick={() => { setUser(null); navigate('/'); }}>Sign Out</button>
+      </div>
+    </div>
+  );
+};
+
+const SignInPage = ({ setUser }) => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
   return (
   <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '10rem', display: 'flex', justifyContent: 'center' }}>
     <div style={{ background: 'var(--surface-color)', padding: '3rem', borderRadius: '20px', boxShadow: 'var(--shadow)', width: '100%', maxWidth: '450px', border: '1px solid var(--border-color)' }}>
       <h2 className="serif" style={{marginBottom: '0.5rem', textAlign: 'center'}}>Welcome Back</h2>
       <p style={{textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem'}}>Sign in to view your itinerary & reservations.</p>
       
-      <input type="email" placeholder="Email Address" style={{width: '100%', padding: '1rem', marginBottom: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit'}} />
+      <input type="email" placeholder="Email Address" value={email} onChange={e => setEmail(e.target.value)} style={{width: '100%', padding: '1rem', marginBottom: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit'}} />
       <input type="password" placeholder="Password" style={{width: '100%', padding: '1rem', marginBottom: '2.5rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit'}} />
       
-      <button className="btn-primary" style={{width: '100%'}} onClick={() => { alert('Sign In Successful!'); navigate('/'); }}>Sign In</button>
+      <button className="btn-primary" style={{width: '100%'}} onClick={() => { if(!email) return alert('Enter email'); setUser(email.split('@')[0] || 'Guest'); alert('Sign In Successful!'); navigate('/'); }}>Sign In</button>
       
       <div style={{textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--text-muted)'}}>
         Don't have an account? <span style={{color: 'var(--accent)', fontWeight: '600', cursor: 'pointer'}} onClick={() => { alert('Redirecting to Registration...'); navigate('/'); }}>Create one</span>
@@ -89,7 +129,79 @@ const SignInPage = () => {
   </div>
 )};
 
-const BookingPage = () => (
+const FeedbackPage = () => {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [comment, setComment] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(rating === 0) return alert('Please select a star rating!');
+    setSubmitted(true);
+  };
+
+  return (
+    <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem', display: 'flex', justifyContent: 'center' }}>
+      <div style={{ background: 'var(--surface-color)', padding: '3rem', borderRadius: '20px', boxShadow: 'var(--shadow)', width: '100%', maxWidth: '600px', border: '1px solid var(--border-color)' }}>
+        {submitted ? (
+          <div style={{textAlign: 'center', padding: '2rem 0'}}>
+             <Check size={48} color="var(--accent)" style={{margin: '0 auto 1rem'}} />
+             <h3 className="serif">Thank you!</h3>
+             <p style={{color: 'var(--text-muted)', marginBottom: '2rem'}}>Your feedback has been successfully submitted.</p>
+             <button className="btn-primary" onClick={()=>setSubmitted(false)}>Submit Another</button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+            <h2 className="serif" style={{marginBottom: '0.5rem', textAlign: 'center'}}>Guest Reviews</h2>
+            <p style={{textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem'}}>We value your experience at Elysian Stay. Please share your thoughts.</p>
+            
+            <div style={{display:'flex', gap:'0.5rem', marginBottom:'1.5rem'}}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star 
+                  key={star} 
+                  size={36}
+                  style={{cursor:'pointer', transition: 'color 0.2s', color: star <= (hover || rating) ? 'var(--accent)' : 'var(--border-color)'}}
+                  fill={star <= (hover || rating) ? 'var(--accent)' : 'transparent'}
+                  onClick={() => setRating(star)}
+                  onMouseEnter={() => setHover(star)}
+                  onMouseLeave={() => setHover(0)}
+                />
+              ))}
+            </div>
+            <textarea 
+              placeholder="Tell us about your relaxing stay..." 
+              value={comment}
+              onChange={e => setComment(e.target.value)}
+              required
+              rows="5"
+              style={{width: '100%', padding: '1rem', marginBottom: '1.5rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit', resize:'vertical'}} 
+            />
+            <div style={{width:'100%', display:'flex', gap:'1rem', alignItems:'center', marginBottom:'2rem'}}>
+               <input type="checkbox" id="recommend" /> <label htmlFor="recommend" style={{color:'var(--text-muted)'}}>I would recommend this guest house.</label>
+            </div>
+            <button type="submit" className="btn-primary" style={{width: '100%'}}>Submit Review</button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const BookingPage = () => {
+  const [processing, setProcessing] = useState(false);
+  const navigate = useNavigate();
+  
+  const handleCheckout = () => {
+    setProcessing(true);
+    setTimeout(() => {
+      setProcessing(false);
+      alert("Payment Successful ✓ Reservation Confirmed via Mock Secure Gateway.");
+      navigate('/');
+    }, 2000);
+  };
+
+  return (
   <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem' }}>
     <div className="section-header">
       <span>Secure Checkout</span>
@@ -113,7 +225,9 @@ const BookingPage = () => (
           <input type="text" placeholder="CVC" style={{flex: 1, padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-main)', outline: 'none'}} />
         </div>
         
-        <button className="btn-primary" style={{width: '100%', padding: '1.2rem'}} onClick={() => alert("Reservation Confirmed! Welcome to Elysian Stay.")}>Confirm & Pay</button>
+        <button className="btn-primary" style={{width: '100%', padding: '1.2rem', opacity: processing ? 0.7 : 1}} onClick={handleCheckout} disabled={processing}>
+           {processing ? 'Processing Secure Payment...' : 'Confirm & Pay'}
+        </button>
       </div>
 
       {/* Summary */}
@@ -143,7 +257,8 @@ const BookingPage = () => (
       </div>
     </div>
   </div>
-);
+  );
+};
 
 // --- WIDGETS ---
 
@@ -341,6 +456,7 @@ const HomePage = () => {
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
@@ -348,13 +464,9 @@ function App() {
 
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
-  // Scroll to top on route change fix
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <Router>
+      <ScrollToTop />
       <div className="app">
         {/* Navigation Bar */}
         <nav className="navbar">
@@ -365,11 +477,20 @@ function App() {
           <div className="nav-links">
             <Link to="/destinations">Destinations</Link>
             <Link to="/experiences">Experiences</Link>
-            <Link to="/offers">Offers</Link>
+            <Link to="/feedback">Reviews</Link>
             <button onClick={toggleTheme} className="theme-toggle">
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
-            <Link to="/signin" className="btn-primary" style={{marginLeft: '1rem'}}>Sign In</Link>
+            {user ? (
+              <Link to="/profile" className="btn-outline" style={{marginLeft: '1rem', padding:'0.5rem 1rem'}}>
+                <div style={{display:'flex', alignItems:'center', gap:'8px'}}>
+                  <div style={{width:'24px', height:'24px', borderRadius:'50%', background:'var(--accent)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.8rem', fontWeight:'bold', border:'none'}}>{user[0].toUpperCase()}</div>
+                  {user}
+                </div>
+              </Link>
+            ) : (
+              <Link to="/signin" className="btn-primary" style={{marginLeft: '1rem'}}>Sign In</Link>
+            )}
           </div>
         </nav>
 
@@ -381,8 +502,9 @@ function App() {
             {/* New Routes dynamically wired to the buttons */}
             <Route path="/destinations" element={<GenericPage title="Global Destinations" subtitle="Our Locations" />} />
             <Route path="/experiences" element={<GenericPage title="Exclusive Experiences" subtitle="Luxury Activities" />} />
-            <Route path="/offers" element={<GenericPage title="Members Offers" subtitle="Premium Packages" />} />
-            <Route path="/signin" element={<SignInPage />} />
+            <Route path="/feedback" element={<FeedbackPage />} />
+            <Route path="/signin" element={<SignInPage setUser={setUser} />} />
+            <Route path="/profile" element={<ProfilePage user={user} setUser={setUser} />} />
             <Route path="/booking" element={<BookingPage />} />
             <Route path="/plan" element={<GenericPage title="AI Itinerary Planner" subtitle="Plan My Stay" />} />
             
