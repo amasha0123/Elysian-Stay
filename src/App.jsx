@@ -12,7 +12,7 @@ const ROOMS_DATA = [
     id: 1,
     name: "Oceanfront Honeymoon Suite",
     mood: "Romantic",
-    price: 350,
+    price: 35000,
     rating: 4.9,
     img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     amenities: ["Private Balcony", "Jacuzzi", "Champagne"]
@@ -21,7 +21,7 @@ const ROOMS_DATA = [
     id: 2,
     name: "Serenity Forest Cabin",
     mood: "Relax",
-    price: 210,
+    price: 21000,
     rating: 4.8,
     img: "https://images.unsplash.com/photo-1540518614846-7eded433c457?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     amenities: ["Nature View", "Spa Access", "Yoga Mat"]
@@ -30,7 +30,7 @@ const ROOMS_DATA = [
     id: 3,
     name: "Grand Horizon Villa",
     mood: "Family",
-    price: 550,
+    price: 55000,
     rating: 5.0,
     img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     amenities: ["3 Bedrooms", "Private Pool", "BBQ Area"]
@@ -39,12 +39,20 @@ const ROOMS_DATA = [
     id: 4,
     name: "Adventure Basecamp",
     mood: "Adventure",
-    price: 180,
+    price: 18000,
     rating: 4.7,
     img: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     amenities: ["Trail Access", "Equipment Rental", "Guided Tours"]
   }
 ];
+
+const ElysianLogo = ({ style }) => (
+  <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '8px', ...style }}>
+    <path d="M50 5 C 80 5, 95 20, 95 50 C 95 80, 80 95, 50 95 C 20 95, 5 80, 5 50 C 5 20, 20 5, 50 5 Z" stroke="var(--accent)" strokeWidth="3" />
+    <path d="M35 35 L65 35 M35 50 L55 50 M35 65 L65 65 M35 35 L35 65" stroke="var(--accent)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M80 50 C 80 30, 60 20, 50 15 C 40 20, 20 30, 20 50" stroke="var(--accent)" strokeWidth="2" opacity="0.4"/>
+  </svg>
+);
 
 // --- PAGES ---
 
@@ -119,16 +127,16 @@ const BookingPage = () => (
         </div>
         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem'}}>
           <span>Rate (4 Nights)</span>
-          <span style={{fontWeight: '500'}}>${ROOMS_DATA[0].price * 4}</span>
+          <span style={{fontWeight: '500'}}>Rs. {(ROOMS_DATA[0].price * 4).toLocaleString()}</span>
         </div>
         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', color: 'var(--text-muted)'}}>
           <span>Taxes & Fees</span>
-          <span style={{fontWeight: '500'}}>$140</span>
+          <span style={{fontWeight: '500'}}>Rs. 14,000</span>
         </div>
         
         <div style={{display: 'flex', justifyContent: 'space-between', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', fontSize: '1.3rem', fontWeight: '600'}}>
           <span>Total</span>
-          <span style={{color: 'var(--accent)'}}>${(ROOMS_DATA[0].price * 4) + 140}</span>
+          <span style={{color: 'var(--accent)'}}>Rs. {((ROOMS_DATA[0].price * 4) + 14000).toLocaleString()}</span>
         </div>
       </div>
     </div>
@@ -228,7 +236,7 @@ const HomePage = () => {
           <div className="booking-bar">
             <div className="booking-input">
               <label>Location</label>
-              <select><option>Elysian Retreat, Bali</option></select>
+              <select><option>Elysian Stay, Homagama, Colombo</option></select>
             </div>
             <div className="booking-input">
               <label>Check-in — Check-out</label>
@@ -274,7 +282,7 @@ const HomePage = () => {
                   <h3 className="serif">{room.name}</h3>
                   <Heart size={20} color="#ccc" style={{cursor:'pointer'}} />
                 </div>
-                <p className="room-price">${room.price} <span style={{fontSize:'0.9rem', color:'var(--text-muted)', fontWeight:'400'}}>/ night</span></p>
+                <p className="room-price">Rs. {room.price.toLocaleString()} <span style={{fontSize:'0.9rem', color:'var(--text-muted)', fontWeight:'400'}}>/ night</span></p>
                 <div className="room-amenities">
                   {room.amenities.map(a => <div key={a}><Check size={14} className="text-accent"/> {a}</div>)}
                 </div>
@@ -324,7 +332,7 @@ function App() {
         {/* Navigation Bar */}
         <nav className="navbar">
           <Link to="/" className="logo text-accent serif">
-            <div>E</div>
+            <ElysianLogo />
             <span style={{color: 'var(--text-main)'}}>Elysian</span>
           </Link>
           <div className="nav-links">
@@ -368,7 +376,7 @@ function App() {
             <div className="footer-grid">
               <div className="footer-col" style={{gridColumn: 'span 2'}}>
                 <div className="logo text-accent serif" style={{marginBottom: '1rem', color: '#fff'}}>
-                  <div style={{background: '#fff'}}>E</div> Elysian Stay
+                  <ElysianLogo style={{ filter: 'brightness(10)' }} /> Elysian Stay
                 </div>
                 <p style={{opacity: 0.8, maxWidth: '300px', lineHeight: '1.8'}}>Redefining the digital escape experience. Connect emotionally, travel luxuriously.</p>
               </div>
