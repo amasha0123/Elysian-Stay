@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Moon, Sun, MessageCircle, X, Navigation, 
   MapPin, Star, Heart, Calendar, Wind, Camera, Check, Send
@@ -66,6 +66,148 @@ const GenericPage = ({ title, subtitle }) => (
       Content for <strong style={{color: 'var(--text-main)'}}>{title}</strong> is currently being curated for your ultimate luxury experience. Check back soon.
     </p>
     <Link to="/" className="btn-primary" style={{marginTop: '2.5rem', display: 'inline-block'}}>Return to Sanctuary</Link>
+  </div>
+);
+
+const AboutPage = () => (
+  <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="section-header" style={{textAlign: 'center'}}>
+      <span>Who We Are</span>
+      <h2 className="serif">About Us</h2>
+    </div>
+    <div style={{ lineHeight: '1.8', color: 'var(--text-main)' }}>
+      <p style={{marginBottom: '1.5rem'}}>Elysian Stay is a modern hotel booking platform designed to make travel simple, fast, and reliable. We connect travelers with carefully selected stays, from luxury hotels to budget-friendly accommodations, all in one place.</p>
+      <p style={{marginBottom: '1.5rem'}}>Our mission is to deliver comfort, convenience, and confidence with every booking. Whether you're traveling for business or leisure, we help you find the perfect stay effortlessly.</p>
+      <h4 className="serif" style={{fontSize: '1.5rem', marginTop: '2.5rem', marginBottom: '1rem', color: 'var(--accent)'}}>Our Mission</h4>
+      <p>To redefine the way people discover and book accommodations — making every journey seamless, every stay memorable, and every guest valued.</p>
+    </div>
+  </div>
+);
+
+const CareersPage = () => (
+  <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="section-header" style={{textAlign: 'center'}}>
+      <span>Join Us</span>
+      <h2 className="serif">Careers</h2>
+    </div>
+    <div style={{ lineHeight: '1.8', color: 'var(--text-main)', textAlign: 'center' }}>
+      <p style={{marginBottom: '2rem'}}>Join Elysian Stay and be part of a team that is transforming the travel experience. We are always looking for passionate individuals in technology, customer service, marketing, and hospitality partnerships.</p>
+      <p style={{marginBottom: '2.5rem', color: 'var(--text-muted)'}}>At Elysian Stay, you'll work in a dynamic environment where innovation and creativity are valued. Grow your career with us and help shape the future of travel.</p>
+      <div style={{ background: 'var(--surface-color)', padding: '2rem', borderRadius: '15px', border: '1px solid var(--border-color)', marginBottom: '1rem', textAlign: 'left' }}>
+        <h4 className="serif" style={{marginBottom: '0.5rem', color: 'var(--text-main)', fontSize: '1.3rem'}}>Technology</h4>
+        <p style={{color: 'var(--accent)', fontWeight: '500'}}>Full-stack Engineers, UI/UX Designers, QA</p>
+      </div>
+      <div style={{ background: 'var(--surface-color)', padding: '2rem', borderRadius: '15px', border: '1px solid var(--border-color)', marginBottom: '1rem', textAlign: 'left' }}>
+        <h4 className="serif" style={{marginBottom: '0.5rem', color: 'var(--text-main)', fontSize: '1.3rem'}}>Customer Service</h4>
+        <p style={{color: 'var(--accent)', fontWeight: '500'}}>Support Agents, Concierge Managers</p>
+      </div>
+      <div style={{ background: 'var(--surface-color)', padding: '2rem', borderRadius: '15px', border: '1px solid var(--border-color)', marginBottom: '1rem', textAlign: 'left' }}>
+        <h4 className="serif" style={{marginBottom: '0.5rem', color: 'var(--text-main)', fontSize: '1.3rem'}}>Marketing & Partnerships</h4>
+        <p style={{color: 'var(--accent)', fontWeight: '500'}}>Content Strategists, Brand Managers, Hospitality Partners</p>
+      </div>
+      <p style={{marginTop: '2rem', color: 'var(--text-muted)'}}>Send your resume to <strong style={{color: 'var(--text-main)'}}>careers@elysianstay.com</strong></p>
+    </div>
+  </div>
+);
+
+const PressPage = () => (
+  <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="section-header" style={{textAlign: 'center'}}>
+      <span>News & Media</span>
+      <h2 className="serif">Press</h2>
+    </div>
+    <div style={{ lineHeight: '1.8', color: 'var(--text-main)' }}>
+      <p style={{marginBottom: '1.5rem'}}>Elysian Stay is redefining how people book accommodations worldwide. For media inquiries, partnerships, or press kits, our team is ready to assist journalists and media organizations.</p>
+      <p style={{marginBottom: '2.5rem'}}>We welcome collaboration and are open to sharing our latest updates, achievements, and product innovations.</p>
+      
+      <div style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+        <span style={{color: 'var(--accent)', fontSize: '0.9rem', fontWeight: 'bold'}}>April 2026</span>
+        <h4 className="serif" style={{fontSize: '1.3rem', margin: '0.5rem 0'}}>Elysian Stay Recognized as Top Booking Platform</h4>
+        <p style={{color: 'var(--text-muted)'}}>Acknowledged for seamless user experience and reliable hospitality coverage across Sri Lanka.</p>
+      </div>
+      <div style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+        <span style={{color: 'var(--accent)', fontSize: '0.9rem', fontWeight: 'bold'}}>February 2026</span>
+        <h4 className="serif" style={{fontSize: '1.3rem', margin: '0.5rem 0'}}>Launch of AI-Powered Itinerary Planner</h4>
+        <p style={{color: 'var(--text-muted)'}}>Introducing smart travel planning that generates personalized stay itineraries for every kind of traveler.</p>
+      </div>
+      <p style={{textAlign: 'center', marginTop: '3rem', color: 'var(--text-muted)'}}>For press inquiries: <strong style={{color: 'var(--text-main)'}}>press@elysianstay.com</strong></p>
+    </div>
+  </div>
+);
+
+const ContactPage = () => (
+  <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem', maxWidth: '600px', margin: '0 auto' }}>
+    <div className="section-header" style={{textAlign: 'center'}}>
+      <span>Contact 24/7</span>
+      <h2 className="serif">Get In Touch</h2>
+    </div>
+    <p style={{textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: '1.8'}}>Need help? Our support team is available around the clock. We respond quickly to ensure your travel experience is smooth and stress-free.</p>
+    <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+      <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
+        <input type="text" placeholder="Name" style={{flex: 1, padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit'}} />
+        <input type="email" placeholder="Email Address" style={{flex: 1, padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit'}} />
+      </div>
+      <input type="text" placeholder="Subject" style={{width: '100%', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit'}} />
+      <textarea placeholder="Your Message..." rows="6" style={{width: '100%', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit', resize: 'vertical'}} />
+      <button type="button" onClick={() => alert("Message sent successfully! Our concierge will contact you shortly.")} className="btn-primary" style={{marginTop: '0.5rem', width: '100%'}}>Send Message</button>
+    </form>
+    <div style={{marginTop: '3rem', textAlign: 'center'}}>
+      <h4 className="serif" style={{marginBottom: '1rem', fontSize: '1.4rem'}}>Direct Lines</h4>
+      <p style={{color: 'var(--text-muted)', marginBottom: '0.5rem', fontSize: '1.1rem'}}>Email: <a href="mailto:support@elysianstay.com" style={{color: 'var(--accent)'}}>support@elysianstay.com</a></p>
+      <p style={{color: 'var(--text-muted)', marginBottom: '0.5rem', fontSize: '1.1rem'}}>Phone: <a href="tel:0783186375" style={{color: 'var(--accent)', textDecoration: 'underline'}}>0783186375</a></p>
+      <p style={{color: 'var(--text-muted)', fontSize: '1.1rem'}}>Live Chat: <span style={{color: 'var(--accent)'}}>Available on our website anytime</span></p>
+    </div>
+  </div>
+);
+
+const FAQPage = () => (
+  <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="section-header" style={{textAlign: 'center'}}>
+      <span>Answers</span>
+      <h2 className="serif">Frequently Asked Questions</h2>
+    </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ background: 'var(--surface-color)', padding: '1.5rem', borderRadius: '15px', border: '1px solid var(--border-color)' }}>
+        <h4 className="serif" style={{marginBottom: '0.5rem', fontSize: '1.2rem', color: 'var(--text-main)'}}>How do I book a hotel?</h4>
+        <p style={{color: 'var(--text-muted)'}}>Simply search your destination, choose a hotel, and confirm your booking in a few clicks.</p>
+      </div>
+      <div style={{ background: 'var(--surface-color)', padding: '1.5rem', borderRadius: '15px', border: '1px solid var(--border-color)' }}>
+        <h4 className="serif" style={{marginBottom: '0.5rem', fontSize: '1.2rem', color: 'var(--text-main)'}}>Can I cancel my booking?</h4>
+        <p style={{color: 'var(--text-muted)'}}>Yes, most bookings allow free cancellation depending on the hotel policy.</p>
+      </div>
+      <div style={{ background: 'var(--surface-color)', padding: '1.5rem', borderRadius: '15px', border: '1px solid var(--border-color)' }}>
+        <h4 className="serif" style={{marginBottom: '0.5rem', fontSize: '1.2rem', color: 'var(--text-main)'}}>Do I need an account to book?</h4>
+        <p style={{color: 'var(--text-muted)'}}>No, but creating an account helps you manage bookings easily.</p>
+      </div>
+      <div style={{ background: 'var(--surface-color)', padding: '1.5rem', borderRadius: '15px', border: '1px solid var(--border-color)' }}>
+        <h4 className="serif" style={{marginBottom: '0.5rem', fontSize: '1.2rem', color: 'var(--text-main)'}}>Is payment secure?</h4>
+        <p style={{color: 'var(--text-muted)'}}>Yes, all payments are encrypted and processed securely.</p>
+      </div>
+      <div style={{ background: 'var(--surface-color)', padding: '1.5rem', borderRadius: '15px', border: '1px solid var(--border-color)' }}>
+        <h4 className="serif" style={{marginBottom: '0.5rem', fontSize: '1.2rem', color: 'var(--text-main)'}}>Can I modify my booking?</h4>
+        <p style={{color: 'var(--text-muted)'}}>Yes, you can request changes depending on availability and hotel policy.</p>
+      </div>
+    </div>
+  </div>
+);
+
+const PrivacyPage = () => (
+  <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="section-header" style={{textAlign: 'center'}}>
+      <span>Your Data</span>
+      <h2 className="serif">Privacy Policy</h2>
+    </div>
+    <div style={{ lineHeight: '1.8', color: 'var(--text-muted)' }}>
+      <p style={{marginBottom: '1.5rem'}}>Elysian Stay respects your privacy and is committed to protecting your personal data. We collect only the information needed to process bookings, improve services, and provide customer support.</p>
+      <p style={{marginBottom: '1.5rem'}}>Your data is securely stored and never sold to third parties. We may use cookies to enhance your browsing experience.</p>
+      <p style={{marginBottom: '1.5rem'}}>By using our platform, you agree to our data practices and terms of service. If you have any concerns, you can contact our support team anytime.</p>
+      <h4 className="serif" style={{fontSize: '1.3rem', color: 'var(--text-main)', marginTop: '2rem', marginBottom: '0.5rem'}}>What We Collect</h4>
+      <p style={{marginBottom: '1.5rem'}}>Name, email address, contact details, and encrypted payment information necessary to process your reservations.</p>
+      <h4 className="serif" style={{fontSize: '1.3rem', color: 'var(--text-main)', marginTop: '2rem', marginBottom: '0.5rem'}}>How We Use It</h4>
+      <p style={{marginBottom: '1.5rem'}}>To process bookings, improve our services, personalize your experience, and provide customer support.</p>
+      <h4 className="serif" style={{fontSize: '1.3rem', color: 'var(--text-main)', marginTop: '2rem', marginBottom: '0.5rem'}}>Your Rights</h4>
+      <p>You may request access, correction, or deletion of your personal data at any time by contacting <a href="mailto:support@elysianstay.com" style={{color: 'var(--accent)'}}>support@elysianstay.com</a>.</p>
+    </div>
   </div>
 );
 
@@ -509,12 +651,12 @@ function App() {
             <Route path="/plan" element={<GenericPage title="AI Itinerary Planner" subtitle="Plan My Stay" />} />
             
             {/* Footer routes */}
-            <Route path="/about" element={<GenericPage title="About Elysian Stay" subtitle="The Company" />} />
-            <Route path="/careers" element={<GenericPage title="Careers" subtitle="Join Us" />} />
-            <Route path="/press" element={<GenericPage title="Press & Media" subtitle="News" />} />
-            <Route path="/contact" element={<GenericPage title="Get In Touch" subtitle="24/7 Support" />} />
-            <Route path="/faq" element={<GenericPage title="Frequently Asked Questions" subtitle="Support center" />} />
-            <Route path="/privacy" element={<GenericPage title="Privacy Policy" subtitle="Your Data Security" />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/careers" element={<CareersPage />} />
+            <Route path="/press" element={<PressPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
           </Routes>
         </div>
 
