@@ -69,7 +69,9 @@ const GenericPage = ({ title, subtitle }) => (
   </div>
 );
 
-const SignInPage = () => (
+const SignInPage = () => {
+  const navigate = useNavigate();
+  return (
   <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '10rem', display: 'flex', justifyContent: 'center' }}>
     <div style={{ background: 'var(--surface-color)', padding: '3rem', borderRadius: '20px', boxShadow: 'var(--shadow)', width: '100%', maxWidth: '450px', border: '1px solid var(--border-color)' }}>
       <h2 className="serif" style={{marginBottom: '0.5rem', textAlign: 'center'}}>Welcome Back</h2>
@@ -78,14 +80,14 @@ const SignInPage = () => (
       <input type="email" placeholder="Email Address" style={{width: '100%', padding: '1rem', marginBottom: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit'}} />
       <input type="password" placeholder="Password" style={{width: '100%', padding: '1rem', marginBottom: '2.5rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit'}} />
       
-      <button className="btn-primary" style={{width: '100%'}}>Sign In</button>
+      <button className="btn-primary" style={{width: '100%'}} onClick={() => { alert('Sign In Successful!'); navigate('/'); }}>Sign In</button>
       
       <div style={{textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--text-muted)'}}>
-        Don't have an account? <span style={{color: 'var(--accent)', fontWeight: '600', cursor: 'pointer'}}>Create one</span>
+        Don't have an account? <span style={{color: 'var(--accent)', fontWeight: '600', cursor: 'pointer'}} onClick={() => { alert('Redirecting to Registration...'); navigate('/'); }}>Create one</span>
       </div>
     </div>
   </div>
-);
+)};
 
 const BookingPage = () => (
   <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem' }}>
@@ -214,8 +216,13 @@ const VirtualTourOverlay = ({ isOpen, setOpen }) => {
 const HomePage = () => {
   const [activeMood, setActiveMood] = useState('All');
   const [tourOpen, setTourOpen] = useState(false);
+  const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
   
+  const toggleFav = (id) => {
+    setFavorites(prev => prev.includes(id) ? prev.filter(fid => fid !== id) : [...prev, id]);
+  };
+
   const filteredRooms = activeMood === 'All' 
     ? ROOMS_DATA 
     : ROOMS_DATA.filter(r => r.mood === activeMood);
@@ -280,7 +287,13 @@ const HomePage = () => {
               <div className="room-details">
                 <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start'}}>
                   <h3 className="serif">{room.name}</h3>
-                  <Heart size={20} color="#ccc" style={{cursor:'pointer'}} />
+                  <Heart 
+                    size={22} 
+                    color={favorites.includes(room.id) ? "#ff4757" : "#ccc"} 
+                    fill={favorites.includes(room.id) ? "#ff4757" : "transparent"} 
+                    style={{cursor:'pointer', transition: 'all 0.3s ease'}} 
+                    onClick={() => toggleFav(room.id)}
+                  />
                 </div>
                 <p className="room-price">Rs. {room.price.toLocaleString()} <span style={{fontSize:'0.9rem', color:'var(--text-muted)', fontWeight:'400'}}>/ night</span></p>
                 <div className="room-amenities">
@@ -295,6 +308,20 @@ const HomePage = () => {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Location & Map */}
+      <section className="section-padding" style={{background: 'var(--glass-bg)'}}>
+        <div className="section-header animate-fade-in-up">
+          <span>Find Us</span>
+          <h2 className="serif">Location & Map</h2>
+        </div>
+        <div className="animate-fade-in-up delay-1" style={{ width: '100%', height: '400px', borderRadius: '20px', overflow: 'hidden', boxShadow: 'var(--shadow)', border: '1px solid var(--border-color)'}}>
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63385.517316712!2d79.98818815!3d6.819777599999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae251786ba11e3b%3A0xe5a3c26dc8d28dbb!2sHomagama!5e0!3m2!1sen!2slk!4v1700000000000!5m2!1sen!2slk" 
+            width="100%" height="100%" style={{border:0}} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Elysian Map">
+          </iframe>
         </div>
       </section>
 
@@ -379,6 +406,9 @@ function App() {
                   <ElysianLogo style={{ filter: 'brightness(10)' }} /> Elysian Stay
                 </div>
                 <p style={{opacity: 0.8, maxWidth: '300px', lineHeight: '1.8'}}>Redefining the digital escape experience. Connect emotionally, travel luxuriously.</p>
+                <div style={{marginTop: '1.5rem'}}>
+                  <p style={{fontWeight:'600'}}>Direct Contact: <a href="tel:0783186375" style={{color:'var(--accent)', textDecoration:'underline'}}>0783186375</a></p>
+                </div>
               </div>
               <div className="footer-col">
                 <h4>Company</h4>
@@ -399,9 +429,9 @@ function App() {
               <div className="footer-col">
                 <h4>Connect</h4>
                 <ul>
-                  <li style={{cursor: 'pointer'}}>Instagram</li>
-                  <li style={{cursor: 'pointer'}}>Twitter</li>
-                  <li style={{cursor: 'pointer'}}>Facebook</li>
+                  <li><a href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram</a></li>
+                  <li><a href="https://twitter.com/" target="_blank" rel="noreferrer">Twitter</a></li>
+                  <li><a href="https://facebook.com/" target="_blank" rel="noreferrer">Facebook</a></li>
                 </ul>
               </div>
             </div>
