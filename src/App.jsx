@@ -1,94 +1,340 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Home, Compass, CalendarCheck, Image, Users, Mail } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { 
+  Moon, Sun, MessageCircle, X, Navigation, 
+  MapPin, Star, Heart, Calendar, Wind, Camera, Check, Send
+} from 'lucide-react';
 import './index.css';
 
-// Simple placeholder components for pages
-const HomePage = () => (
-  <main>
-    <section className="hero">
-      <div className="hero-content">
-        <h1>Create unforgettable memories<br/>with your loved ones</h1>
-        <p>A relaxing, free, and joyful environment to escape from busy life.</p>
-        <Link to="/rooms" className="btn-primary" style={{ textDecoration: 'none' }}>Plan Your Stay</Link>
-      </div>
-    </section>
-    <section className="section-padding" style={{ background: 'white' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '2.5rem', color: 'var(--primary)', marginBottom: '1rem' }}>Welcome to Elysian Stay</h2>
-        <p style={{ maxWidth: '700px', margin: '0 auto', color: 'var(--text-light)' }}>
-          Experience a warm, peaceful, and enjoyable atmosphere. We provide a smooth booking experience, comfort, privacy, and fun activities designed to build emotional connection, happiness, and freedom.
-        </p>
-      </div>
-    </section>
-  </main>
+// MOCK DATA: Rooms with Mood tags
+const ROOMS_DATA = [
+  {
+    id: 1,
+    name: "Oceanfront Honeymoon Suite",
+    mood: "Romantic",
+    price: 350,
+    rating: 4.9,
+    img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    amenities: ["Private Balcony", "Jacuzzi", "Champagne"]
+  },
+  {
+    id: 2,
+    name: "Serenity Forest Cabin",
+    mood: "Relax",
+    price: 210,
+    rating: 4.8,
+    img: "https://images.unsplash.com/photo-1540518614846-7eded433c457?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    amenities: ["Nature View", "Spa Access", "Yoga Mat"]
+  },
+  {
+    id: 3,
+    name: "Grand Horizon Villa",
+    mood: "Family",
+    price: 550,
+    rating: 5.0,
+    img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    amenities: ["3 Bedrooms", "Private Pool", "BBQ Area"]
+  },
+  {
+    id: 4,
+    name: "Adventure Basecamp",
+    mood: "Adventure",
+    price: 180,
+    rating: 4.7,
+    img: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    amenities: ["Trail Access", "Equipment Rental", "Guided Tours"]
+  }
+];
+
+// --- PAGES ---
+
+const GenericPage = ({ title, subtitle }) => (
+  <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem', textAlign: 'center' }}>
+    <div className="section-header">
+      <span>{subtitle || 'Discover More'}</span>
+      <h2 className="serif" style={{marginBottom: '1.5rem'}}>{title}</h2>
+    </div>
+    <p style={{maxWidth: '600px', margin: '0 auto', color: 'var(--text-muted)'}}>
+      Content for <strong style={{color: 'var(--text-main)'}}>{title}</strong> is currently being curated for your ultimate luxury experience. Check back soon.
+    </p>
+    <Link to="/" className="btn-primary" style={{marginTop: '2.5rem', display: 'inline-block'}}>Return to Sanctuary</Link>
+  </div>
 );
 
-const RoomsPage = () => (
-    <div className="section-padding" style={{ minHeight: '80vh', maxWidth: '1200px', margin: '0 auto' }}>
-        <h1 style={{ color: 'var(--primary)', marginBottom: '2rem' }}>Rooms & Pricing</h1>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-            {[
-                { name: 'Family Room', price: '$200/night', img: 'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=500' },
-                { name: 'Couple Suite', price: '$150/night', img: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=500' },
-                { name: 'Luxury Villa', price: '$350/night', img: 'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=500' }
-            ].map(room => (
-                <div key={room.name} style={{ background: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                    <img src={room.img} alt={room.name} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
-                    <div style={{ padding: '1.5rem' }}>
-                        <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{room.name}</h3>
-                        <p style={{ color: 'var(--text-light)', marginBottom: '1rem' }}>{room.price}</p>
-                        <Link to="/booking" className="btn-book" style={{ display: 'inline-block', textDecoration: 'none' }}>Book Now</Link>
-                    </div>
-                </div>
-            ))}
-        </div>
+const SignInPage = () => (
+  <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '10rem', display: 'flex', justifyContent: 'center' }}>
+    <div style={{ background: 'var(--surface-color)', padding: '3rem', borderRadius: '20px', boxShadow: 'var(--shadow)', width: '100%', maxWidth: '450px', border: '1px solid var(--border-color)' }}>
+      <h2 className="serif" style={{marginBottom: '0.5rem', textAlign: 'center'}}>Welcome Back</h2>
+      <p style={{textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem'}}>Sign in to view your itinerary & reservations.</p>
+      
+      <input type="email" placeholder="Email Address" style={{width: '100%', padding: '1rem', marginBottom: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit'}} />
+      <input type="password" placeholder="Password" style={{width: '100%', padding: '1rem', marginBottom: '2.5rem', borderRadius: '10px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--bg-color)', color: 'var(--text-main)', fontFamily: 'inherit'}} />
+      
+      <button className="btn-primary" style={{width: '100%'}}>Sign In</button>
+      
+      <div style={{textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--text-muted)'}}>
+        Don't have an account? <span style={{color: 'var(--accent)', fontWeight: '600', cursor: 'pointer'}}>Create one</span>
+      </div>
     </div>
+  </div>
 );
 
 const BookingPage = () => (
-    <div className="section-padding" style={{ minHeight: '80vh', maxWidth: '600px', margin: '0 auto' }}>
-        <h1 style={{ color: 'var(--primary)', marginBottom: '2rem' }}>Book Your Stay</h1>
-        <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem', background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-            <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem' }}>Full Name</label>
-                <input type="text" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
-            </div>
-            <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem' }}>Email</label>
-                <input type="email" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
-            </div>
-             <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem' }}>Check-in Date</label>
-                <input type="date" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
-            </div>
-            <button type="button" onClick={() => alert('Booking Submitted Successfully!')} className="btn-primary" style={{ marginTop: '1rem' }}>Secure Payment & Book</button>
-        </form>
+  <div className="section-padding animate-fade-in-up" style={{ minHeight: '80vh', paddingTop: '12rem' }}>
+    <div className="section-header">
+      <span>Secure Checkout</span>
+      <h2 className="serif">Complete Your Reservation</h2>
     </div>
+    
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '3rem' }}>
+      {/* Form */}
+      <div style={{ background: 'var(--surface-color)', padding: '2.5rem', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
+        <h3 className="serif" style={{marginBottom: '1.5rem', fontSize: '1.5rem'}}>Guest Details</h3>
+        <div style={{display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap'}}>
+          <input type="text" placeholder="First Name" style={{flex: 1, minWidth: '140px', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-main)', outline: 'none'}} />
+          <input type="text" placeholder="Last Name" style={{flex: 1, minWidth: '140px', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-main)', outline: 'none'}} />
+        </div>
+        <input type="email" placeholder="Email Address" style={{width: '100%', padding: '1rem', marginBottom: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-main)', outline: 'none'}} />
+        
+        <h3 className="serif" style={{marginBottom: '1.5rem', marginTop: '2.5rem', fontSize: '1.5rem'}}>Secure Payment</h3>
+        <input type="text" placeholder="Card Number" style={{width: '100%', padding: '1rem', marginBottom: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-main)', outline: 'none'}} />
+        <div style={{display: 'flex', gap: '1rem', marginBottom: '2.5rem'}}>
+          <input type="text" placeholder="MM/YY" style={{flex: 1, padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-main)', outline: 'none'}} />
+          <input type="text" placeholder="CVC" style={{flex: 1, padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-main)', outline: 'none'}} />
+        </div>
+        
+        <button className="btn-primary" style={{width: '100%', padding: '1.2rem'}} onClick={() => alert("Reservation Confirmed! Welcome to Elysian Stay.")}>Confirm & Pay</button>
+      </div>
+
+      {/* Summary */}
+      <div style={{ background: 'var(--surface-color)', padding: '2.5rem', borderRadius: '20px', border: '1px solid var(--accent)', height: 'fit-content' }}>
+        <h3 className="serif" style={{marginBottom: '1.5rem', fontSize: '1.5rem', color: 'var(--accent)'}}>Your Stay</h3>
+        <img src={ROOMS_DATA[0].img} alt="" style={{width: '100%', height: '180px', objectFit: 'cover', borderRadius: '10px', marginBottom: '1.5rem'}} />
+        <h4 className="serif" style={{fontSize: '1.3rem', marginBottom: '0.5rem'}}>{ROOMS_DATA[0].name}</h4>
+        <p style={{color: 'var(--text-muted)', marginBottom: '1.5rem'}}>1 Room • 2 Guests</p>
+        
+        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem'}}>
+          <span>Dates</span>
+          <span style={{fontWeight: '500'}}>Oct 12 - Oct 16</span>
+        </div>
+        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem'}}>
+          <span>Rate (4 Nights)</span>
+          <span style={{fontWeight: '500'}}>${ROOMS_DATA[0].price * 4}</span>
+        </div>
+        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', color: 'var(--text-muted)'}}>
+          <span>Taxes & Fees</span>
+          <span style={{fontWeight: '500'}}>$140</span>
+        </div>
+        
+        <div style={{display: 'flex', justifyContent: 'space-between', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', fontSize: '1.3rem', fontWeight: '600'}}>
+          <span>Total</span>
+          <span style={{color: 'var(--accent)'}}>${(ROOMS_DATA[0].price * 4) + 140}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 );
 
-const PlaceholderPage = ({ title }) => (
-    <div className="section-padding" style={{ minHeight: '80vh' }}>
-        <h1 style={{ color: 'var(--primary)', textAlign: 'center' }}>{title}</h1>
-        <p style={{ textAlign: 'center', marginTop: '1rem', color: 'var(--text-light)' }}>Coming soon...</p>
+// --- WIDGETS ---
+
+const Chatbot = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [msgs, setMsgs] = useState([{ sender: 'ai', text: 'Welcome to Elysian Stay. I am your personal digital concierge. How can I perfect your escape today?' }]);
+  const [input, setInput] = useState('');
+
+  const handleSend = () => {
+    if(!input.trim()) return;
+    setMsgs([...msgs, { sender: 'user', text: input }]);
+    setInput('');
+    setTimeout(() => {
+      setMsgs(prev => [...prev, { sender: 'ai', text: 'I can certainly help with that. Would you like me to tailor our "Plan My Stay" itinerary to your preferences?' }]);
+    }, 1000);
+  };
+
+  return (
+    <>
+      <div className="chat-fab" onClick={() => setIsOpen(!isOpen)}>
+        {isOpen ? <X size={28} /> : <MessageCircle size={28} />}
+      </div>
+
+      <div className="chat-window" style={{ opacity: isOpen ? 1 : 0, transform: isOpen ? 'scale(1)' : 'scale(0.9)', pointerEvents: isOpen ? 'auto' : 'none' }}>
+        <div className="chat-header">
+          <h4>Elysian Concierge&trade;</h4>
+          <X size={20} style={{cursor:'pointer'}} onClick={() => setIsOpen(false)} />
+        </div>
+        <div className="chat-body">
+          {msgs.map((m, i) => (
+            <div key={i} className={`msg ${m.sender}`}>
+              {m.text}
+            </div>
+          ))}
+        </div>
+        <div className="chat-input">
+          <input 
+            type="text" 
+            placeholder="Type your request..." 
+            value={input} 
+            onChange={e => setInput(e.target.value)}
+            onKeyPress={e => e.key === 'Enter' && handleSend()}
+          />
+          <button onClick={handleSend}><Send size={16} style={{marginLeft: '-2px'}} /></button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+
+const VirtualTourOverlay = ({ isOpen, setOpen }) => {
+  if(!isOpen) return null;
+  return (
+    <div className="tour-overlay animate-fade-in-up">
+      <button className="tour-close" onClick={() => setOpen(false)}><X size={24} /></button>
+      <h2 className="serif" style={{marginBottom: '1rem', fontSize: '2.5rem'}}>360° Virtual Tour</h2>
+      <p style={{marginBottom: '2rem', color: '#ccc'}}>Interactive panorama loaded...</p>
+      {/* Mock panorama area */}
+      <div style={{width: '80%', height: '60%', background: 'url(https://images.unsplash.com/photo-1542314831-c6a4d14d8c1c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80) center/cover', borderRadius: '20px', border: '2px solid rgba(255,255,255,0.2)', position:'relative', display:'flex', alignItems:'center', justifyContent:'center'}}>
+        <div style={{background: 'rgba(0,0,0,0.5)', padding: '1rem 2rem', borderRadius: '30px', backdropFilter: 'blur(5px)'}}>
+           Drag to look around <Navigation size={18} style={{verticalAlign:'middle', marginLeft:'10px'}}/>
+        </div>
+      </div>
     </div>
-);
+  );
+};
+
+
+const HomePage = () => {
+  const [activeMood, setActiveMood] = useState('All');
+  const [tourOpen, setTourOpen] = useState(false);
+  const navigate = useNavigate();
+  
+  const filteredRooms = activeMood === 'All' 
+    ? ROOMS_DATA 
+    : ROOMS_DATA.filter(r => r.mood === activeMood);
+
+  return (
+    <main>
+      <VirtualTourOverlay isOpen={tourOpen} setOpen={setTourOpen} />
+      
+      {/* Premium Hero */}
+      <section className="hero">
+        <div className="hero-bg" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')" }}></div>
+        <div className="hero-overlay"></div>
+        <div className="hero-content animate-fade-in-up">
+          <span className="hero-subtitle">Welcome to your escape</span>
+          <h1 className="serif">Where Luxury Meets Serenity</h1>
+          <p>Immerse yourself in a sanctuary designed for unforgettable memories, relaxation, and bespoke experiences.</p>
+          
+          <div className="booking-bar">
+            <div className="booking-input">
+              <label>Location</label>
+              <select><option>Elysian Retreat, Bali</option></select>
+            </div>
+            <div className="booking-input">
+              <label>Check-in — Check-out</label>
+              <input type="text" placeholder="Select Dates" style={{width: '180px'}} readOnly value="Oct 12 — Oct 16"/>
+            </div>
+            <div className="booking-input">
+              <label>Guests</label>
+              <select><option>2 Adults, 0 Children</option></select>
+            </div>
+            <button className="btn-primary" onClick={() => navigate('/booking')}>Check Availability</button>
+          </div>
+        </div>
+      </section>
+
+      {/* Mood-Based Booking */}
+      <section className="section-padding">
+        <div className="section-header animate-fade-in-up">
+          <span>Curated For You</span>
+          <h2 className="serif">Find Your Perfect Vibe</h2>
+        </div>
+        
+        <div className="mood-selector animate-fade-in-up delay-1">
+          {['All', 'Relax', 'Romantic', 'Adventure', 'Family'].map(mood => (
+            <button 
+              key={mood}
+              className={`mood-chip ${activeMood === mood ? 'active' : ''}`}
+              onClick={() => setActiveMood(mood)}
+            >
+              {mood}
+            </button>
+          ))}
+        </div>
+
+        <div className="rooms-grid animate-fade-in-up delay-2">
+          {filteredRooms.map(room => (
+            <div key={room.id} className="room-card">
+              <div className="room-img-container">
+                <span className="room-tag"><Star size={12} color="#D4AF37" style={{verticalAlign:'middle', marginRight:'4px'}}/>{room.rating}</span>
+                <img src={room.img} alt={room.name} />
+              </div>
+              <div className="room-details">
+                <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start'}}>
+                  <h3 className="serif">{room.name}</h3>
+                  <Heart size={20} color="#ccc" style={{cursor:'pointer'}} />
+                </div>
+                <p className="room-price">${room.price} <span style={{fontSize:'0.9rem', color:'var(--text-muted)', fontWeight:'400'}}>/ night</span></p>
+                <div className="room-amenities">
+                  {room.amenities.map(a => <div key={a}><Check size={14} className="text-accent"/> {a}</div>)}
+                </div>
+                <div className="room-actions">
+                  <button className="btn-outline" onClick={() => setTourOpen(true)}>
+                    <Camera size={16} /> 360° Tour
+                  </button>
+                  <button className="btn-primary" onClick={() => navigate('/booking')}>Reserve</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* "Plan My Stay" Smart Banner */}
+      <section className="experiences-banner">
+        <div className="animate-fade-in-up">
+          <span style={{textTransform:'uppercase', letterSpacing:'3px', marginBottom:'1rem', display:'block'}}>Exclusive Packages</span>
+          <h2 className="serif">Elevate Your Experience</h2>
+          <p>Let our AI-driven "Plan My Stay" feature automatically generate a personalized itinerary of activities, dining, and spa treatments tailored perfectly to you.</p>
+          <button className="btn-primary" style={{fontSize:'1rem', padding:'1rem 3rem'}} onClick={() => navigate('/plan')}>Plan My Itinerary</button>
+        </div>
+      </section>
+    </main>
+  );
+};
+
 
 function App() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
+
+  // Scroll to top on route change fix
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <Router>
       <div className="app">
         {/* Navigation Bar */}
         <nav className="navbar">
-          <Link to="/" className="logo">
-            <Home size={28} />
-            Elysian Stay
+          <Link to="/" className="logo text-accent serif">
+            <div>E</div>
+            <span style={{color: 'var(--text-main)'}}>Elysian</span>
           </Link>
           <div className="nav-links">
-            <Link to="/rooms"><Compass size={18} style={{verticalAlign: 'bottom', marginRight: '4px'}}/> Rooms & Pricing</Link>
-            <Link to="/gallery"><Image size={18} style={{verticalAlign: 'bottom', marginRight: '4px'}}/> Gallery</Link>
-            <Link to="/reviews"><Users size={18} style={{verticalAlign: 'bottom', marginRight: '4px'}}/> Reviews</Link>
-            <Link to="/contact"><Mail size={18} style={{verticalAlign: 'bottom', marginRight: '4px'}}/> Contact</Link>
-            <Link to="/booking" className="btn-book"><CalendarCheck size={18} style={{verticalAlign: 'bottom', marginRight: '4px'}}/> Book Now</Link>
+            <Link to="/destinations">Destinations</Link>
+            <Link to="/experiences">Experiences</Link>
+            <Link to="/offers">Offers</Link>
+            <button onClick={toggleTheme} className="theme-toggle">
+              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            <Link to="/signin" className="btn-primary" style={{marginLeft: '1rem'}}>Sign In</Link>
           </div>
         </nav>
 
@@ -96,17 +342,64 @@ function App() {
         <div style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/rooms" element={<RoomsPage />} />
+            
+            {/* New Routes dynamically wired to the buttons */}
+            <Route path="/destinations" element={<GenericPage title="Global Destinations" subtitle="Our Locations" />} />
+            <Route path="/experiences" element={<GenericPage title="Exclusive Experiences" subtitle="Luxury Activities" />} />
+            <Route path="/offers" element={<GenericPage title="Members Offers" subtitle="Premium Packages" />} />
+            <Route path="/signin" element={<SignInPage />} />
             <Route path="/booking" element={<BookingPage />} />
-            <Route path="/gallery" element={<PlaceholderPage title="Gallery View" />} />
-            <Route path="/reviews" element={<PlaceholderPage title="Customer Reviews" />} />
-            <Route path="/contact" element={<PlaceholderPage title="Contact Us" />} />
+            <Route path="/plan" element={<GenericPage title="AI Itinerary Planner" subtitle="Plan My Stay" />} />
+            
+            {/* Footer routes */}
+            <Route path="/about" element={<GenericPage title="About Elysian Stay" subtitle="The Company" />} />
+            <Route path="/careers" element={<GenericPage title="Careers" subtitle="Join Us" />} />
+            <Route path="/press" element={<GenericPage title="Press & Media" subtitle="News" />} />
+            <Route path="/contact" element={<GenericPage title="Get In Touch" subtitle="24/7 Support" />} />
+            <Route path="/faq" element={<GenericPage title="Frequently Asked Questions" subtitle="Support center" />} />
+            <Route path="/privacy" element={<GenericPage title="Privacy Policy" subtitle="Your Data Security" />} />
           </Routes>
         </div>
 
+        <Chatbot />
+
         {/* Footer */}
-        <footer className="footer">
-            <p>&copy; 2026 Elysian Stay. All rights reserved.</p>
+        <footer>
+            <div className="footer-grid">
+              <div className="footer-col" style={{gridColumn: 'span 2'}}>
+                <div className="logo text-accent serif" style={{marginBottom: '1rem', color: '#fff'}}>
+                  <div style={{background: '#fff'}}>E</div> Elysian Stay
+                </div>
+                <p style={{opacity: 0.8, maxWidth: '300px', lineHeight: '1.8'}}>Redefining the digital escape experience. Connect emotionally, travel luxuriously.</p>
+              </div>
+              <div className="footer-col">
+                <h4>Company</h4>
+                <ul>
+                  <li><Link to="/about">About Us</Link></li>
+                  <li><Link to="/careers">Careers</Link></li>
+                  <li><Link to="/press">Press</Link></li>
+                </ul>
+              </div>
+              <div className="footer-col">
+                <h4>Support</h4>
+                <ul>
+                  <li><Link to="/contact">Contact 24/7</Link></li>
+                  <li><Link to="/faq">FAQ</Link></li>
+                  <li><Link to="/privacy">Privacy Policy</Link></li>
+                </ul>
+              </div>
+              <div className="footer-col">
+                <h4>Connect</h4>
+                <ul>
+                  <li style={{cursor: 'pointer'}}>Instagram</li>
+                  <li style={{cursor: 'pointer'}}>Twitter</li>
+                  <li style={{cursor: 'pointer'}}>Facebook</li>
+                </ul>
+              </div>
+            </div>
+            <div className="footer-bottom">
+              &copy; 2026 Elysian Stay Global. All rights reserved. Secure Gateway Active <Check size={12}/>
+            </div>
         </footer>
       </div>
     </Router>
