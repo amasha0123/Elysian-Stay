@@ -24,6 +24,7 @@ import PressPage from './pages/PressPage';
 import ContactPage from './pages/ContactPage';
 import FAQPage from './pages/FAQPage';
 import PrivacyPage from './pages/PrivacyPage';
+import PlanPage from './pages/PlanPage';
 
 import './index.css';
 
@@ -81,7 +82,7 @@ function App() {
             <Route path="/signin" element={<SignInPage setUser={setUser} />} />
             <Route path="/profile" element={<ProfilePage user={user} setUser={setUser} />} />
             <Route path="/booking" element={<Elements stripe={stripePromise}><BookingPage /></Elements>} />
-            <Route path="/plan" element={<GenericPage title="AI Itinerary Planner" subtitle="Plan My Stay" />} />
+            <Route path="/plan" element={<PlanPage />} />
             
             {/* Footer routes */}
             <Route path="/about" element={<AboutPage />} />

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ROOMS_DATA from '../data/roomsData';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -11,6 +11,8 @@ const BookingPage = () => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
+  const location = useLocation();
+  const preSelected = location.state || {};
 
   const [processing, setProcessing] = useState(false);
   const [firstName, setFirstName] = useState('');
@@ -190,8 +192,12 @@ const BookingPage = () => {
             />
 
             <h4>{ROOMS_DATA[0].name}</h4>
-            <p>1 Room • 2 Guests</p>
+            <p>{preSelected.guests || '1 Room • 2 Guests'}</p>
 
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>Stay Dates</span>
+              <span>{preSelected.dates || 'Oct 12 - Oct 16'}</span>
+            </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span>Total</span>
               <span>Rs. {totalAmount.toLocaleString()}</span>

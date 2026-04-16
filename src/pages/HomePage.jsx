@@ -8,10 +8,18 @@ const HomePage = () => {
   const [activeMood, setActiveMood] = useState('All');
   const [tourOpen, setTourOpen] = useState(false);
   const [favorites, setFavorites] = useState([]);
+  const [bookingData, setBookingData] = useState({
+    dates: 'Oct 12 — Oct 16',
+    guests: '2 Adults, 0 Children'
+  });
   const navigate = useNavigate();
   
   const toggleFav = (id) => {
     setFavorites(prev => prev.includes(id) ? prev.filter(fid => fid !== id) : [...prev, id]);
+  };
+
+  const handleSearch = () => {
+    navigate('/booking', { state: bookingData });
   };
 
   const filteredRooms = activeMood === 'All' 
@@ -38,13 +46,27 @@ const HomePage = () => {
             </div>
             <div className="booking-input">
               <label>Check-in — Check-out</label>
-              <input type="text" placeholder="Select Dates" style={{width: '180px'}} readOnly value="Oct 12 — Oct 16"/>
+              <input 
+                type="text" 
+                placeholder="Select Dates" 
+                style={{width: '180px'}} 
+                value={bookingData.dates}
+                onChange={(e) => setBookingData({...bookingData, dates: e.target.value})}
+              />
             </div>
             <div className="booking-input">
               <label>Guests</label>
-              <select><option>2 Adults, 0 Children</option></select>
+              <select 
+                value={bookingData.guests}
+                onChange={(e) => setBookingData({...bookingData, guests: e.target.value})}
+              >
+                <option>1 Adult</option>
+                <option>2 Adults, 0 Children</option>
+                <option>2 Adults, 1 Child</option>
+                <option>4 Adults (Group)</option>
+              </select>
             </div>
-            <button className="btn-primary" onClick={() => navigate('/booking')}>Check Availability</button>
+            <button className="btn-primary" onClick={handleSearch}>Check Availability</button>
           </div>
         </div>
       </section>
