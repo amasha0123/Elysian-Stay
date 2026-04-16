@@ -8,6 +8,10 @@ import ScrollToTop from './components/ScrollToTop';
 import Chatbot from './components/Chatbot';
 
 // Pages
+// Stripe
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
 import HomePage from './pages/HomePage';
 import GenericPage from './pages/GenericPage';
 import FeedbackPage from './pages/FeedbackPage';
@@ -22,6 +26,8 @@ import FAQPage from './pages/FAQPage';
 import PrivacyPage from './pages/PrivacyPage';
 
 import './index.css';
+
+const stripePromise = loadStripe("pk_test_51TMLINEhgtPmFQQyrOy4t4TzKasinwek2mYR2wKzZ3m7Jltn4UxJPjchoYqPMJnnOPeZQWmN5658PI1naKo87Ql000K8bt3HCP");
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -74,7 +80,7 @@ function App() {
             <Route path="/feedback" element={<FeedbackPage />} />
             <Route path="/signin" element={<SignInPage setUser={setUser} />} />
             <Route path="/profile" element={<ProfilePage user={user} setUser={setUser} />} />
-            <Route path="/booking" element={<BookingPage />} />
+            <Route path="/booking" element={<Elements stripe={stripePromise}><BookingPage /></Elements>} />
             <Route path="/plan" element={<GenericPage title="AI Itinerary Planner" subtitle="Plan My Stay" />} />
             
             {/* Footer routes */}

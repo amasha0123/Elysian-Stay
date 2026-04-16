@@ -1,13 +1,13 @@
-const express = require("express");
-const Stripe = require("stripe");
-const cors = require("cors");
+import express from "express";
+import Stripe from "stripe";
+import cors from "cors";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // IMPORTANT: Replace with your actual Stripe Secret Key
-const stripe = Stripe("sk_test_51P...YOUR_SECRET_KEY");
+const stripe = new Stripe("sk_test_51P...YOUR_SECRET_KEY");
 
 app.post("/create-payment-intent", async (req, res) => {
   try {
